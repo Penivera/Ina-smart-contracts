@@ -6,6 +6,7 @@ use near_sdk::collections::UnorderedMap;
 
 mod models;
 mod types;
+mod contract;
 
 #[near_bindgen]
 #[derive(Default)]

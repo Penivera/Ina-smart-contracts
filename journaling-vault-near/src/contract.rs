@@ -15,8 +15,8 @@ pub struct JournalEntry {
 
 #[near_bindgen]
 impl Contract {
-    pub fn add_journal_entry(&mut self, user: AccountId, content: String, tags: Vec<String>, is_private: bool) {
-        let entry = JournalEntry {
+    pub fn add_journal_entry(&mut self, user: AccountId, content: String, tags: Vec<Tag>, is_private: bool) {
+        let entry: JournalEntry = JournalEntry {
             user: user.clone(),
             content,
             tags,
