@@ -17,7 +17,7 @@ crate-type = ["cdylib", "rlib"]
 image = "sourcescan/cargo-near:0.15.0-rust-1.86.0"
 # tag after colon above serves only descriptive purpose; image is identified by digest
 image_digest = "sha256:aad208b09976f643b56104cc6af87fbb03afadff2e76f9e5e3fa283969e15f8b"
-repository = "https://github.com/Penivera/UnchainHer-Contracts"
+
 # list of environment variables names, whose values, if set, will be used as external build parameters
 # in a reproducible manner
 # supported by `sourcescan/cargo-near:0.10.1-rust-1.82.0` image or later images
