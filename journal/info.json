@@ -1,0 +1,145 @@
+{
+  "schema_version": "0.4.0",
+  "metadata": {
+    "name": "cargo-near-new-project-name",
+    "version": "0.1.0"
+  },
+  "body": {
+    "functions": [
+      {
+        "name": "add_journal_entry",
+        "kind": "call",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "content",
+              "type_schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "tags",
+              "type_schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/Tag"
+                }
+              }
+            },
+            {
+              "name": "is_private",
+              "type_schema": {
+                "type": "boolean"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "contract_source_metadata",
+        "kind": "view"
+      },
+      {
+        "name": "get_public_entries",
+        "kind": "view",
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/JournalEntry"
+            }
+          }
+        }
+      },
+      {
+        "name": "get_user_entries",
+        "kind": "view",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "user",
+              "type_schema": {
+                "$ref": "#/definitions/AccountId"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/JournalEntry"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "new",
+        "kind": "call",
+        "modifiers": [
+          "init"
+        ]
+      }
+    ],
+    "root_schema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "String",
+      "type": "string",
+      "definitions": {
+        "AccountId": {
+          "description": "NEAR Account Identifier.\n\nThis is a unique, syntactically valid, human-readable account identifier on the NEAR network.\n\n[See the crate-level docs for information about validation.](index.html#account-id-rules)\n\nAlso see [Error kind precedence](AccountId#error-kind-precedence).\n\n## Examples\n\n``` use near_account_id::AccountId;\n\nlet alice: AccountId = \"alice.near\".parse().unwrap();\n\nassert!(\"ƒelicia.near\".parse::<AccountId>().is_err()); // (ƒ is not f) ```",
+          "type": "string"
+        },
+        "JournalEntry": {
+          "type": "object",
+          "required": [
+            "content",
+            "is_private",
+            "tags",
+            "user"
+          ],
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "is_private": {
+              "type": "boolean"
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Tag"
+              }
+            },
+            "user": {
+              "type": "string"
+            }
+          }
+        },
+        "Tag": {
+          "type": "string",
+          "enum": [
+            "Happy",
+            "Sad",
+            "Angry",
+            "Anxious",
+            "Hopeful",
+            "Grateful",
+            "Lonely",
+            "Confident",
+            "Tired",
+            "Overwhelmed"
+          ]
+        }
+      }
+    }
+  }
+}

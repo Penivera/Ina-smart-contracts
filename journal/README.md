@@ -1,87 +1,72 @@
-# cargo-near-new-project-name
+# Journaling Vault Smart Contract
 
-cargo-near-new-project-description
+A NEAR smart contract for securely storing and retrieving user journal entries with privacy controls and tag support.
 
-## Quickstart Guide
+## Features
 
-You can start coding on the NEAR Rust stack in less than a minute, thanks to [NEAR Devcontainers](https://github.com/near/near-devcontainers). How?
+- **Add Journal Entry:**  
+  Users can submit a journal entry with text content, tags (mood or cycle), and a privacy flag (`is_private`).
 
-1. Click **Use this template** > **Create a new repository**
+- **Get User Entries:**  
+  Retrieve all journal entries for a specific user.
 
-<img width="750" alt="Create a new repository" src="https://github.com/njelich/cargo-near-new-project-template/assets/12912633/d59d89f1-8bc4-42f1-8e0d-842521d87768">
+- **Get Public Entries:**  
+  Retrieve all journal entries marked as public (for DAO voting or community features).
 
-2. In your newly created repo, click **Code** > **Codespaces** > **Create codespace on main**
+## Data Model
 
-<img width="750" alt="Create Codespace" src="https://github.com/njelich/cargo-near-new-project-template/assets/12912633/352566cf-2eca-4d42-8232-6136ea8ec9d3">
+### JournalEntry
 
-## Where to Get Started?
+| Field       | Type      | Description                        |
+|-------------|-----------|------------------------------------|
+| user        | string    | NEAR account ID of the entry owner |
+| content     | string    | The journal text                   |
+| tags        | Tag[]     | Tags for mood or cycle             |
+| is_private  | boolean   | Privacy flag (true = private)      |
 
-Start writing your contract logic in [src/lib.rs](src/lib.rs) and integration tests in [tests/test_basics.rs](tests/test_basics.rs).
+### Tag
 
-## How to Build Locally?
+Supported values:
+- Happy
+- Sad
+- Angry
+- Anxious
+- Hopeful
+- Grateful
+- Lonely
+- Confident
+- Tired
+- Overwhelmed
 
-Install [`cargo-near`](https://github.com/near/cargo-near) and run:
+## Contract Methods
 
-```bash
-cargo near build non-reproducible-wasm
-```
+### `add_journal_entry(content: String, tags: Vec<Tag>, is_private: bool)`
 
-## How to Test Locally?
+Add a new journal entry for the caller.
 
-```bash
-cargo test
-```
+### `get_user_entries(user: AccountId) -> Option<JournalEntry>`
 
-## How to Deploy?
+Fetch all journal entries for a given user.
 
-Deployment is automated with GitHub Actions CI/CD pipeline.
-To deploy manually, install [`cargo-near`](https://github.com/near/cargo-near) and run:
+### `get_public_entries() -> Vec<JournalEntry>`
 
-```bash
-cargo near deploy build-non-reproducible-wasm <account-id>
-```
+Fetch all public journal entries.
 
-## Updating rustup
+### `new()`
 
-Currently 1.86.0 is maximum version, supported by Nearcore for running compiled wasm contracts.
+Initialize the contract.
 
-So, updating version to a newer toolchain is not recommended. 
+## Usage
 
-If, for whaterver reason, one needs to update rust in Codespaces environment,
+1. **Deploy the contract** to NEAR.
+2. **Call `add_journal_entry`** to add your journal entry.
+3. **Call `get_user_entries`** to retrieve your entries.
+4. **Call `get_public_entries`** to see all public entries.
 
-it's possible to set password in codespaces container:
+## JSON Schema
 
-```bash
-sudo passwd $(whoami)
-```
+See [`info.json`](journal/info.json) for the full contract interface and data schema.
 
-then, update `rustup` folder permissions 
+---
 
-```bash
-sudo chown -R $(whoami):$(whoami) /usr/local/rustup
-```
-
-then maybe remove some `cargo-clippy` conflicting binary:
-```bash
-rm $CARGO_HOME/bin/cargo-clippy
-```
-
-and then run 
-
-```bash
-rustup update
-```
-
-to completion.
-
-
-## Useful Links
-
-- [cargo-near](https://github.com/near/cargo-near) - NEAR smart contract development toolkit for Rust
-- [near CLI](https://near.cli.rs) - Iteract with NEAR blockchain from command line
-- [NEAR Rust SDK Documentation](https://docs.near.org/sdk/rust/introduction)
-- [NEAR Documentation](https://docs.near.org)
-- [NEAR StackOverflow](https://stackoverflow.com/questions/tagged/nearprotocol)
-- [NEAR Discord](https://near.chat)
-- [NEAR Telegram Developers Community Group](https://t.me/neardev)
-- NEAR DevHub: [Telegram](https://t.me/neardevhub), [Twitter](https://twitter.com/neardevhub)
+**Project generated with [Cargo Near](https://github.com/near/cargo-near)**
