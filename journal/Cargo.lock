@@ -408,19 +408,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cargo-near-new-project-name"
-version = "0.1.0"
-dependencies = [
- "borsh 0.10.4",
- "near-sdk",
- "near-workspaces",
- "schemars",
- "serde",
- "serde_json",
- "tokio",
-]
-
-[[package]]
 name = "cargo-platform"
 version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3403,6 +3390,19 @@ dependencies = [
  "crunchy",
  "hex",
  "static_assertions",
+]
+
+[[package]]
+name = "unchain-journal-contract"
+version = "0.1.0"
+dependencies = [
+ "borsh 0.10.4",
+ "near-sdk",
+ "near-workspaces",
+ "schemars",
+ "serde",
+ "serde_json",
+ "tokio",
 ]
 
 [[package]]
