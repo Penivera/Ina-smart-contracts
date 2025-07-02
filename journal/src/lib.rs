@@ -1,36 +1,45 @@
-// filepath: /journaling-vault-near/journaling-vault-near/src/lib.rs
-use near_sdk::near_bindgen;
-use near_sdk::env;
-use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::collections::UnorderedMap;
-
-mod models;
+use std::collections::HashMap;
+use near_sdk::{env, near_bindgen, AccountId,
+    borsh::{self, BorshDeserialize, BorshSerialize},
+    PanicOnDefault};
+use serde::{Serialize,Deserialize};
 mod types;
-mod contract;
+use types as journal_types;
+use journal_types::{JournalEntry, Tag};
 
 #[near_bindgen]
-#[derive(Default)]
+#[derive(BorshDeserialize, BorshSerialize, PanicOnDefault,Serialize,Deserialize)]
 pub struct JournalingVault {
-    entries: UnorderedMap<String, models::JournalEntry>,
+    entries: HashMap<AccountId, JournalEntry>,
 }
-
 #[near_bindgen]
 impl JournalingVault {
-    pub fn add_journal_entry(&mut self, user: String, content: String, tags: Vec<types::Tag>, is_private: bool) {
-        let entry = models::JournalEntry {
-            user: user.clone(),
-            content,
-            tags: tags,
-            is_private,
-        };
-        self.entries.insert(&user, &entry);
+    #[init]
+    pub fn new() -> Self {
+        Self {
+            entries: HashMap::new(),
+        }
     }
 
-    pub fn get_user_entries(&self, user: String) -> Option<models::JournalEntry> {
+    pub fn add_journal_entry(&mut self, content: String, tags: Vec<Tag>, is_private: bool) {
+        let user: AccountId = env::predecessor_account_id();
+        let entry: JournalEntry = JournalEntry {
+            user: String::from(user.clone()),
+            content,
+            tags,
+            is_private,
+        };
+        self.entries.insert(user, entry);
+    }
+
+    pub fn get_user_entries(&self, user:AccountId ) -> Option<&JournalEntry> {
         self.entries.get(&user)
     }
 
-    pub fn get_public_entries(&self) -> Vec<models::JournalEntry> {
-        self.entries.values().filter(|entry| !entry.is_private).collect()
+    pub fn get_public_entries(&self) -> Vec<&JournalEntry> {
+        self.entries
+            .values()
+            .filter(|entry| !entry.is_private)
+            .collect()
     }
 }

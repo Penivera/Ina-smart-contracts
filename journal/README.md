@@ -1,65 +1,87 @@
-# Journaling Vault on NEAR
+# cargo-near-new-project-name
 
-## Overview
-The Journaling Vault is a smart contract project on the NEAR platform that allows users to submit and save text journal entries. Each entry can have optional tags and a privacy setting, enabling users to manage their personal reflections securely.
+cargo-near-new-project-description
 
-## Features
-- **Submit Journal Entries**: Users can create journal entries with text content.
-- **Tags**: Users can add tags to their entries for better organization.
-- **Privacy Settings**: Each entry can be marked as private or public, allowing users to control who can see their entries.
-- **Fetch Entries**: Users can retrieve their own entries or view public entries.
+## Quickstart Guide
 
-## Project Structure
+You can start coding on the NEAR Rust stack in less than a minute, thanks to [NEAR Devcontainers](https://github.com/near/near-devcontainers). How?
+
+1. Click **Use this template** > **Create a new repository**
+
+<img width="750" alt="Create a new repository" src="https://github.com/njelich/cargo-near-new-project-template/assets/12912633/d59d89f1-8bc4-42f1-8e0d-842521d87768">
+
+2. In your newly created repo, click **Code** > **Codespaces** > **Create codespace on main**
+
+<img width="750" alt="Create Codespace" src="https://github.com/njelich/cargo-near-new-project-template/assets/12912633/352566cf-2eca-4d42-8232-6136ea8ec9d3">
+
+## Where to Get Started?
+
+Start writing your contract logic in [src/lib.rs](src/lib.rs) and integration tests in [tests/test_basics.rs](tests/test_basics.rs).
+
+## How to Build Locally?
+
+Install [`cargo-near`](https://github.com/near/cargo-near) and run:
+
+```bash
+cargo near build non-reproducible-wasm
 ```
-journaling-vault-near
-├── src
-│   ├── lib.rs          # Entry point for the smart contract
-│   ├── models.rs       # Data structures for journal entries
-│   ├── contract.rs      # Core functionality of the smart contract
-│   └── types.rs        # Additional types and enums
-├── Cargo.toml          # Rust project configuration
-└── README.md           # Project documentation
+
+## How to Test Locally?
+
+```bash
+cargo test
 ```
 
-## Getting Started
+## How to Deploy?
 
-### Prerequisites
-- Rust installed on your machine
-- NEAR CLI installed for deploying the contract
+Deployment is automated with GitHub Actions CI/CD pipeline.
+To deploy manually, install [`cargo-near`](https://github.com/near/cargo-near) and run:
 
-### Installation
-1. Clone the repository:
-   ```
-   git clone <repository-url>
-   cd journaling-vault-near
-   ```
+```bash
+cargo near deploy build-non-reproducible-wasm <account-id>
+```
 
-2. Build the project:
-   ```
-   cargo build --release
-   ```
+## Updating rustup
 
-### Deployment
-1. Deploy the contract to the NEAR testnet:
-   ```
-   near deploy --accountId <your-account-id> --wasmFile target/wasm32-unknown-unknown/release/journaling_vault.wasm
-   ```
+Currently 1.86.0 is maximum version, supported by Nearcore for running compiled wasm contracts.
 
-### Interacting with the Contract
-- To add a journal entry:
-  ```
-  near call <contract-account-id> add_journal_entry '{"user": "<your-account-id>", "content": "<your-entry-content>", "tags": ["tag1", "tag2"], "is_private": false}' --accountId <your-account-id>
-  ```
+So, updating version to a newer toolchain is not recommended. 
 
-- To fetch your journal entries:
-  ```
-  near call <contract-account-id> get_user_entries '{"user": "<your-account-id>"}' --accountId <your-account-id>
-  ```
+If, for whaterver reason, one needs to update rust in Codespaces environment,
 
-- To fetch public entries:
-  ```
-  near call <contract-account-id> get_public_entries '{}' --accountId <your-account-id>
-  ```
+it's possible to set password in codespaces container:
 
-## License
-This project is licensed under the MIT License. See the LICENSE file for more details.
+```bash
+sudo passwd $(whoami)
+```
+
+then, update `rustup` folder permissions 
+
+```bash
+sudo chown -R $(whoami):$(whoami) /usr/local/rustup
+```
+
+then maybe remove some `cargo-clippy` conflicting binary:
+```bash
+rm $CARGO_HOME/bin/cargo-clippy
+```
+
+and then run 
+
+```bash
+rustup update
+```
+
+to completion.
+
+
+## Useful Links
+
+- [cargo-near](https://github.com/near/cargo-near) - NEAR smart contract development toolkit for Rust
+- [near CLI](https://near.cli.rs) - Iteract with NEAR blockchain from command line
+- [NEAR Rust SDK Documentation](https://docs.near.org/sdk/rust/introduction)
+- [NEAR Documentation](https://docs.near.org)
+- [NEAR StackOverflow](https://stackoverflow.com/questions/tagged/nearprotocol)
+- [NEAR Discord](https://near.chat)
+- [NEAR Telegram Developers Community Group](https://t.me/neardev)
+- NEAR DevHub: [Telegram](https://t.me/neardevhub), [Twitter](https://twitter.com/neardevhub)
