@@ -1,4 +1,4 @@
-# ina-nft
+# unchainher-nft
 
 cargo-near-new-project-description
 

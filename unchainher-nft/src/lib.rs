@@ -29,7 +29,7 @@ impl HasNew for NFTContractMetadata {
         let extract_cid = |url: &str| url.split("/ipfs/").nth(1).unwrap_or("").to_string();
         Self {
             spec: "nft-2.0.0".to_string(),
-            name: "ina-nft".to_string(),
+            name: "unchainher-nft".to_string(),
             symbol: "UHER".to_string(),
             icon: Some(media_url.clone()),
             base_uri: Some(format!("ipfs://{}", extract_cid(&media_url))),
