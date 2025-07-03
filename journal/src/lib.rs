@@ -1,7 +1,5 @@
 use std::collections::HashMap;
-use near_sdk::{env, near_bindgen, AccountId,
-    borsh::{self, BorshDeserialize, BorshSerialize},
-    PanicOnDefault};
+use near_sdk::{borsh::{self, BorshDeserialize, BorshSerialize}, env, log, near_bindgen, AccountId, PanicOnDefault};
 use serde::{Serialize,Deserialize};
 mod types;
 use types as journal_types;
@@ -29,6 +27,7 @@ impl JournalingVault {
             tags,
             is_private,
         };
+        log!("Adding journal entry for user: {}, Private {:?}", user, entry.is_private);
         self.entries.insert(user, entry);
     }
 

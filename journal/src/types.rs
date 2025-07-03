@@ -6,7 +6,7 @@ use near_sdk::{
 use schemars::JsonSchema;
 
 #[derive(
-    BorshDeserialize, BorshSerialize, Serialize, Deserialize, JsonSchema, Clone
+    BorshDeserialize, BorshSerialize, Serialize, Deserialize, JsonSchema, Clone,Debug
 )]
 pub enum Tag {
     Happy,
@@ -22,7 +22,7 @@ pub enum Tag {
 }
 
 #[derive(
-    BorshDeserialize, BorshSerialize, Serialize, Deserialize, JsonSchema, Clone
+    BorshDeserialize, BorshSerialize, Serialize, Deserialize, JsonSchema, Clone,Debug
 )]
 pub struct JournalEntry {
     pub user: String,
