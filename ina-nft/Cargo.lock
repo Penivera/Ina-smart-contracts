@@ -1356,20 +1356,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ina-nft"
-version = "0.1.0"
-dependencies = [
- "borsh 0.10.4",
- "near-contract-standards",
- "near-sdk",
- "near-workspaces",
- "schemars 0.8.22",
- "serde",
- "serde_json",
- "tokio",
-]
-
-[[package]]
 name = "indenter"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3489,6 +3475,20 @@ dependencies = [
  "crunchy",
  "hex",
  "static_assertions",
+]
+
+[[package]]
+name = "ina-nft"
+version = "0.1.0"
+dependencies = [
+ "borsh 0.10.4",
+ "near-contract-standards",
+ "near-sdk",
+ "near-workspaces",
+ "schemars 0.8.22",
+ "serde",
+ "serde_json",
+ "tokio",
 ]
 
 [[package]]
