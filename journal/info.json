@@ -1,8 +1,13 @@
 {
   "schema_version": "0.4.0",
   "metadata": {
-    "name": "cargo-near-new-project-name",
-    "version": "0.1.0"
+    "name": "unchain-journal-contract",
+    "version": "0.1.0",
+    "build": {
+      "compiler": "rustc 1.86.0",
+      "builder": "cargo-near cargo-near-build 0.7.1"
+    },
+    "wasm_hash": "4gG1WPe5evka3NHvMY1Joeda44zesWikaizcYLM6uWmy"
   },
   "body": {
     "functions": [
@@ -41,6 +46,139 @@
         "kind": "view"
       },
       {
+        "name": "get_all_entries",
+        "kind": "view",
+        "modifiers": [
+          "private"
+        ],
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/JournalEntry"
+            }
+          }
+        }
+      },
+      {
+        "name": "get_journal_by_id",
+        "kind": "view",
+        "modifiers": [
+          "private"
+        ],
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "entry_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/JournalEntry"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "get_journal_by_token_id",
+        "kind": "view",
+        "modifiers": [
+          "private"
+        ],
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "token_id",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/JournalEntry"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "get_minted_entries",
+        "kind": "view",
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/JournalEntry"
+            }
+          }
+        }
+      },
+      {
+        "name": "get_minters",
+        "kind": "view",
+        "modifiers": [
+          "private"
+        ],
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/AccountId"
+            }
+          }
+        }
+      },
+      {
+        "name": "get_private_entries",
+        "kind": "view",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "user",
+              "type_schema": {
+                "$ref": "#/definitions/AccountId"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/JournalEntry"
+            }
+          }
+        }
+      },
+      {
         "name": "get_public_entries",
         "kind": "view",
         "result": {
@@ -50,6 +188,37 @@
             "items": {
               "$ref": "#/definitions/JournalEntry"
             }
+          }
+        }
+      },
+      {
+        "name": "get_token_metadata",
+        "kind": "view",
+        "modifiers": [
+          "private"
+        ],
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "journal_id",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/TokenMetadata"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         }
       },
@@ -82,11 +251,61 @@
         }
       },
       {
-        "name": "new",
+        "name": "initiate",
         "kind": "call",
         "modifiers": [
           "init"
-        ]
+        ],
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "media_url",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "mint_nft_for_entry",
+        "kind": "call",
+        "modifiers": [
+          "payable"
+        ],
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "entry_id",
+              "type_schema": {
+                "type": "integer",
+                "format": "uint64",
+                "minimum": 0.0
+              }
+            },
+            {
+              "name": "media_url",
+              "type_schema": {
+                "type": "string"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "nft_metadata",
+        "kind": "view",
+        "modifiers": [
+          "private"
+        ],
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "$ref": "#/definitions/NFTContractMetadata"
+          }
+        }
       }
     ],
     "root_schema": {
@@ -98,19 +317,39 @@
           "description": "NEAR Account Identifier.\n\nThis is a unique, syntactically valid, human-readable account identifier on the NEAR network.\n\n[See the crate-level docs for information about validation.](index.html#account-id-rules)\n\nAlso see [Error kind precedence](AccountId#error-kind-precedence).\n\n## Examples\n\n``` use near_account_id::AccountId;\n\nlet alice: AccountId = \"alice.near\".parse().unwrap();\n\nassert!(\"ƒelicia.near\".parse::<AccountId>().is_err()); // (ƒ is not f) ```",
           "type": "string"
         },
+        "Base64VecU8": {
+          "description": "Helper class to serialize/deserialize `Vec<u8>` to base64 string.\n\n# Example ```rust use near_sdk::{json_types::Base64VecU8, near};\n\n#[near(serializers=[json])] struct NewStruct { field: Base64VecU8, } ```",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint8",
+            "minimum": 0.0
+          }
+        },
         "JournalEntry": {
           "type": "object",
           "required": [
             "content",
+            "entry_id",
             "is_private",
+            "minted_nft",
             "tags",
+            "timestamp",
             "user"
           ],
           "properties": {
             "content": {
               "type": "string"
             },
+            "entry_id": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            },
             "is_private": {
+              "type": "boolean"
+            },
+            "minted_nft": {
               "type": "boolean"
             },
             "tags": {
@@ -119,7 +358,60 @@
                 "$ref": "#/definitions/Tag"
               }
             },
+            "timestamp": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            },
             "user": {
+              "type": "string"
+            }
+          }
+        },
+        "NFTContractMetadata": {
+          "description": "Metadata for the NFT contract itself.",
+          "type": "object",
+          "required": [
+            "name",
+            "spec",
+            "symbol"
+          ],
+          "properties": {
+            "base_uri": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "icon": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name": {
+              "type": "string"
+            },
+            "reference": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "reference_hash": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Base64VecU8"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "spec": {
+              "type": "string"
+            },
+            "symbol": {
               "type": "string"
             }
           }
@@ -138,6 +430,93 @@
             "Tired",
             "Overwhelmed"
           ]
+        },
+        "TokenMetadata": {
+          "type": "object",
+          "properties": {
+            "copies": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "format": "uint64",
+              "minimum": 0.0
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "expires_at": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "extra": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "issued_at": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "media": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "media_hash": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Base64VecU8"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reference": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "reference_hash": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Base64VecU8"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "starts_at": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "title": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "updated_at": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
         }
       }
     }
