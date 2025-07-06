@@ -60,15 +60,18 @@ impl JournalingContract {
         log!("Adding journal entry for user: {}, Private {:?}", user, entry.is_private);
         self.journal_entries.insert(user.to_string(), entry);
     }
-
+    
+    #[private]
     pub fn get_user_entries(&self, user:AccountId ) -> Option<&JournalEntry> {
         self.journal_entries.get(&user.to_string())
     }
 
+    #[private]
     pub fn get_public_entries(&self) -> Vec<&JournalEntry> {
         self.journal_entries.values().filter(|entry: &&JournalEntry| !entry.is_private).collect()
     }
 
+    #[private]
     pub fn get_private_entries(&self, user: AccountId) -> Vec<&JournalEntry> {
         self.journal_entries.values().filter(|entry: &&JournalEntry| entry.is_private && entry.user == user).collect()
     }
@@ -155,5 +158,34 @@ impl JournalingContract {
         let user: AccountId = env::predecessor_account_id();
         self.journal_entries.values().filter(|entry| entry.minted_nft && entry.user == user).collect()
     }
+
+    #[private]
+    pub fn get_all_minted_entries(&self) -> Vec<&JournalEntry> {
+        self.journal_entries.values().filter(|entry| entry.minted_nft).collect()
+    }
+
+    pub fn get_my_journal_entries(&self) -> Vec<&JournalEntry> {
+        let user: AccountId = env::predecessor_account_id();
+        self.journal_entries.values().filter(|entry| entry.user == user).collect()
+    }
+    pub fn get_my_private_journal_entries(&self) -> Vec<&JournalEntry> {
+        let user: AccountId = env::predecessor_account_id();
+        self.journal_entries.values().filter(|entry| entry.is_private && entry.user == user).collect()
+    }
+
+    pub fn get_my_minted_journal_entries(&self) -> Vec<&JournalEntry> {
+        let user: AccountId = env::predecessor_account_id();
+        self.journal_entries.values().filter(|entry| entry.minted_nft && entry.user == user).collect()
+    }
+    pub fn get_my_public_journal_entries(&self) -> Vec<&JournalEntry> {
+        let user: AccountId = env::predecessor_account_id();
+        self.journal_entries.values().filter(|entry| !entry.is_private && entry.user == user).collect()
+    }
+
+    pub fn get_my_journal_entries_by_tag(&self, tag: Tag) -> Vec<&JournalEntry> {
+        let user: AccountId = env::predecessor_account_id();
+        self.journal_entries.values().filter(|entry| entry.user == user && entry.tags.contains(&tag)).collect()
+    }
+
 
 }

@@ -9,7 +9,7 @@ use near_contract_standards::non_fungible_token::{
 use schemars::JsonSchema;
 
 #[derive(
-    BorshDeserialize, BorshSerialize, Serialize, Deserialize, JsonSchema, Clone,Debug
+    BorshDeserialize, BorshSerialize, Serialize, Deserialize, JsonSchema, Clone,Debug,PartialEq
 )]
 pub enum Tag {
     Happy,
