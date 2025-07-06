@@ -7,7 +7,7 @@
       "compiler": "rustc 1.86.0",
       "builder": "cargo-near cargo-near-build 0.7.1"
     },
-    "wasm_hash": "4gG1WPe5evka3NHvMY1Joeda44zesWikaizcYLM6uWmy"
+    "wasm_hash": "8qi1ALGuB51dCBgXXTYDjcmZcNbuZ4oCWbf6DBm7zWDZ"
   },
   "body": {
     "functions": [
@@ -47,6 +47,22 @@
       },
       {
         "name": "get_all_entries",
+        "kind": "view",
+        "modifiers": [
+          "private"
+        ],
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/JournalEntry"
+            }
+          }
+        }
+      },
+      {
+        "name": "get_all_minted_entries",
         "kind": "view",
         "modifiers": [
           "private"
@@ -155,8 +171,87 @@
         }
       },
       {
+        "name": "get_my_journal_entries",
+        "kind": "view",
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/JournalEntry"
+            }
+          }
+        }
+      },
+      {
+        "name": "get_my_journal_entries_by_tag",
+        "kind": "view",
+        "params": {
+          "serialization_type": "json",
+          "args": [
+            {
+              "name": "tag",
+              "type_schema": {
+                "$ref": "#/definitions/Tag"
+              }
+            }
+          ]
+        },
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/JournalEntry"
+            }
+          }
+        }
+      },
+      {
+        "name": "get_my_minted_journal_entries",
+        "kind": "view",
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/JournalEntry"
+            }
+          }
+        }
+      },
+      {
+        "name": "get_my_private_journal_entries",
+        "kind": "view",
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/JournalEntry"
+            }
+          }
+        }
+      },
+      {
+        "name": "get_my_public_journal_entries",
+        "kind": "view",
+        "result": {
+          "serialization_type": "json",
+          "type_schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/JournalEntry"
+            }
+          }
+        }
+      },
+      {
         "name": "get_private_entries",
         "kind": "view",
+        "modifiers": [
+          "private"
+        ],
         "params": {
           "serialization_type": "json",
           "args": [
@@ -181,6 +276,9 @@
       {
         "name": "get_public_entries",
         "kind": "view",
+        "modifiers": [
+          "private"
+        ],
         "result": {
           "serialization_type": "json",
           "type_schema": {
@@ -225,6 +323,9 @@
       {
         "name": "get_user_entries",
         "kind": "view",
+        "modifiers": [
+          "private"
+        ],
         "params": {
           "serialization_type": "json",
           "args": [
