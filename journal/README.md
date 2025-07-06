@@ -65,7 +65,7 @@ Initialize the contract.
 
 ## JSON Schema
 
-See [`info.json`](journal/info.json) for the full contract interface and data schema.
+See [`info.json`](/journal/info.json) for the full contract interface and data schema.
 
 ---
 
