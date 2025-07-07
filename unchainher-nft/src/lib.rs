@@ -30,7 +30,7 @@ impl HasNew for NFTContractMetadata {
         Self {
             spec: "nft-2.0.0".to_string(),
             name: "unchainher-nft".to_string(),
-            symbol: "UHER".to_string(),
+            symbol: "INA".to_string(),
             icon: Some(media_url.clone()),
             base_uri: Some(format!("ipfs://{}", extract_cid(&media_url))),
             reference: None,
@@ -46,7 +46,7 @@ impl Contract {
     pub fn new(media_url: String) -> Self {
         let owner_id: AccountId = env::predecessor_account_id();
         log!("Initializing contract with owner: {}", owner_id);
-        let tokens = NonFungibleToken::new(
+        let tokens: NonFungibleToken = NonFungibleToken::new(
             b"nft".to_vec(),
             owner_id.clone(),
             Some(b"nft_approvals".to_vec()),

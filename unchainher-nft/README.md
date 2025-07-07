@@ -1,142 +1,125 @@
-# UnchainHer NFT Smart Contract
-
-This contract implements a NEAR Non-Fungible Token (NFT) collection for the UnchainHer project, empowering women with digital ownership. It is based on the NEAR NFT standard and provides minting, metadata, and minter tracking functionality.
 
 ---
 
-## Features
+# 📝 UnchainHer Journal NFT Smart Contract
 
-- **NFT Minting:**  
-  Each account can mint one unique NFT. Minting is restricted to one per account.
+This smart contract powers the **UnchainHer Journal**, allowing users to document their thoughts as journal entries, manage privacy, and mint special entries as NFTs on the NEAR blockchain.
 
-- **Metadata Management:**  
-  The contract stores and exposes collection-level metadata (name, symbol, icon, base_uri) and per-token metadata.
-
-- **Minter Tracking:**  
-  Keeps track of all accounts that have minted an NFT.
+It extends NEAR's NFT standard with journaling capabilities, giving users control, privacy, and ownership of their digital expressions.
 
 ---
 
-## Contract Structure
+## ✨ Features
+
+* **Journal Entries:**
+  Users can add public or private journal entries with emotional tags.
+
+* **NFT Minting:**
+  Special journal entries can be tokenized as NFTs to ensure ownership and permanence.
+
+* **Metadata Management:**
+  The contract provides collection-level metadata (name, symbol, base\_uri) and per-token metadata for journal NFTs.
+
+* **Minter Tracking:**
+  Keeps track of which users have minted NFTs.
+
+* **Privacy Controls:**
+  Supports private entries visible only to the user.
+
+---
+
+## 📦 Contract Structure
 
 ### Storage
 
-- `tokens: NonFungibleToken`  
+* `tokens: NonFungibleToken`
   Handles NFT logic and storage.
 
-- `metadata: LazyOption<NFTContractMetadata>`  
-  Stores contract-level metadata (name, symbol, icon, base_uri).
+* `metadata: LazyOption<NFTContractMetadata>`
+  Stores contract-level metadata (name, symbol, base\_uri).
 
-- `minters: UnorderedSet<AccountId>`  
-  Tracks which accounts have minted an NFT.
+* `minters: UnorderedSet<AccountId>`
+  Tracks which accounts have minted NFTs.
+
+* `journal_entries: Vector<JournalEntry>`
+  Stores all journal entries.
 
 ---
 
-## Initialization
+## ⚙️ Initialization
 
-### `new(media_url: String) -> Self`
+### `initiate(media_url: String)`
 
-Initializes the contract.  
-- `media_url`: The IPFS or web URL for the NFT collection's icon/media.  
-- The contract owner is set to the account that deploys the contract.
+Initializes the contract.
+
+* `media_url`: IPFS or web URL for the journal NFT collection icon or media.
 
 **Example:**
+
 ```bash
-near call <contract> new '{"media_url": "https://ipfs.io/ipfs/<CID>"}' --accountId <your-account>
+near call <contract> initiate '{"media_url": "https://ipfs.io/ipfs/<CID>"}' --accountId <your-account>
 ```
 
 ---
 
-## Methods
+## 🛠 Methods
 
-### `mint_nft()`
+### ✍️ Journal Management
 
-Mints an NFT for the caller.  
-- Only one NFT per account is allowed.
-- The NFT metadata is set using the contract's icon/media and standard fields.
-
-**Example:**
-```bash
-near call <contract> mint_nft '{}' --accountId <your-account>
-```
-
-### `get_metadata() -> NFTContractMetadata`
-
-Returns the contract's metadata (name, symbol, icon, base_uri, etc).
-
-**Example:**
-```bash
-near view <contract> get_metadata '{}'
-```
-
-### `get_minters() -> Vec<AccountId>`
-
-Returns a list of all accounts that have minted an NFT.
-
-**Example:**
-```bash
-near view <contract> get_minters '{}'
-```
-
-### `get_token_metadata() -> Option<TokenMetadata>`
-
-Returns the metadata for the NFT owned by the caller (using the caller's account ID as the token ID).
-
-**Example:**
-```bash
-near view <contract> get_token_metadata '{}'
-```
+| Method                                         | Description                                                  |
+| ---------------------------------------------- | ------------------------------------------------------------ |
+| `add_journal_entry(content, tags, is_private)` | Adds a journal entry with tags and privacy flag.             |
+| `get_all_entries()`                            | Returns all journal entries *(private view)*.                |
+| `get_journal_by_id(entry_id)`                  | Fetch a specific journal entry by ID *(private view)*.       |
+| `get_journal_by_token_id(token_id)`            | Fetch journal entry linked to a minted NFT *(private view)*. |
+| `get_user_entries(user)`                       | Returns all entries by a specific user.                      |
+| `get_private_entries(user)`                    | Returns private entries belonging to a user.                 |
+| `get_public_entries()`                         | Returns all public journal entries.                          |
 
 ---
 
-## Frontend Integration Guide
+### 🎨 NFT Management
 
-- **Mint Button:**  
-  Call `mint_nft()` for the connected wallet. Disable the button if the user is already a minter (check with `get_minters()`).
-
-- **Display NFT:**  
-  Use `get_token_metadata()` to fetch and display the user's NFT image and details.
-
-- **Show Collection Info:**  
-  Use `get_metadata()` to display the collection's name, symbol, and icon.
-
-- **List Minters:**  
-  Use `get_minters()` to show all accounts that have minted an NFT.
+| Method                                    | Description                                              |
+| ----------------------------------------- | -------------------------------------------------------- |
+| `mint_nft_for_entry(entry_id, media_url)` | Tokenizes a journal entry as an NFT *(payable)*.         |
+| `get_minted_entries()`                    | Returns all entries that have been minted as NFTs.       |
+| `get_minters()`                           | Returns accounts that have minted NFTs *(private view)*. |
+| `get_token_metadata(journal_id)`          | Returns metadata for a journal's NFT *(private view)*.   |
+| `nft_metadata()`                          | Returns global NFT contract metadata *(private view)*.   |
 
 ---
 
-## Backend Integration Guide
+### 🔎 Contract Metadata
 
-- **Ownership Verification:**  
-  Use `get_minters()` to verify if a user has minted an NFT.
-
-- **Metadata Fetching:**  
-  Use `get_metadata()` and `get_token_metadata()` for collection and token details.
-
-- **Minting Automation:**  
-  Call `mint_nft()` on behalf of users (requires their signature).
+| Method                                     | Description                                |
+| ------------------------------------------ | ------------------------------------------ |
+| `get_metadata()` *(Alias: `nft_metadata`)* | Returns contract-level metadata.           |
+| `contract_source_metadata()`               | Returns build information of the contract. |
 
 ---
 
-## Notes
+## 🏷 Allowed Tags for Journal Entries
 
-- **Token ID:**  
-  The token ID is set to the minter's account ID.
-
-- **Media URL:**  
-  The contract expects an IPFS or HTTP(S) URL for the collection icon/media.
-
-- **Standard Compliance:**  
-  Built on NEAR's NFT standard for compatibility with wallets and marketplaces.
+* Happy
+* Sad
+* Angry
+* Anxious
+* Hopeful
+* Grateful
+* Lonely
+* Confident
+* Tired
+* Overwhelmed
 
 ---
 
-## Example NFT Metadata
+## 🖼️ Example NFT Metadata
 
 ```json
 {
-  "title": "UnchainHer NFT",
-  "description": "Empowering Women with Ownership",
+  "title": "UnchainHer Journal NFT",
+  "description": "Tokenized Journal Entry from the UnchainHer Project",
   "media": "https://ipfs.io/ipfs/<CID>",
   "copies": 1,
   "issued_at": "<timestamp>"
@@ -145,10 +128,52 @@ near view <contract> get_token_metadata '{}'
 
 ---
 
-## License
+## 🔗 Frontend Integration Guide
+
+* **Add Entry:**
+  Call `add_journal_entry()` for users to document thoughts.
+
+* **Mint NFT:**
+  Call `mint_nft_for_entry()` for eligible entries.
+
+* **Display User Journal:**
+  Use `get_user_entries()` to fetch user content, filtering private entries.
+
+* **NFT Gallery:**
+  Use `get_minted_entries()` to show all tokenized journal entries.
+
+* **Collection Info:**
+  Use `get_metadata()` or `nft_metadata()` for collection details.
+
+---
+
+## 🔒 Privacy Considerations
+
+* **Public entries** are viewable by anyone.
+* **Private entries** are only visible to the creator via `get_private_entries()` or `get_user_entries()`.
+
+---
+
+## 🧩 Notes
+
+* **Token IDs:**
+  Token IDs correspond to minted journal entries.
+
+* **Ownership:**
+  Minted NFTs give users verifiable ownership of specific entries.
+
+* **Standard Compliance:**
+  Built on NEAR's NFT standard for marketplace compatibility.
+
+---
+
+## 📄 License
 
 MIT
 
 ---
 
-**For more information, see [NEAR NFT Standard Documentation](https://nomicon.io/Standards/NonFungibleToken/Core).**
+**For more details, refer to the [NEAR NFT Standard Documentation](https://nomicon.io/Standards/NonFungibleToken/Core).**
+
+---
+
