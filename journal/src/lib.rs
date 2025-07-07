@@ -6,9 +6,10 @@ use serde::{Serialize,Deserialize};
 mod types;
 use types as journal_types;
 use journal_types::{JournalEntry, Tag};
+use schemars::JsonSchema;
 
 #[near_bindgen]
-#[derive(BorshDeserialize, BorshSerialize, PanicOnDefault,Serialize,Deserialize)]
+#[derive(BorshDeserialize, BorshSerialize, PanicOnDefault,Serialize,Deserialize,JsonSchema)]
 pub struct JournalingVault {
     entries: HashMap<AccountId, JournalEntry>,
 }
