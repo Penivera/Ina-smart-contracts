@@ -34,7 +34,7 @@ impl JournalingContract {
         Self {
             journal_entries: HashMap::new(),
             tokens: NonFungibleToken::new(
-                b"nft".to_vec(),owner_id.clone(),
+                b"g".to_vec(),owner_id.clone(),
                 Some(b"a".to_vec()),
                 Some(b"b".to_vec()),
                 Some(b"c".to_vec()),
