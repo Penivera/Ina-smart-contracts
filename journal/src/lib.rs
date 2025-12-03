@@ -35,12 +35,12 @@ impl JournalingContract {
             journal_entries: HashMap::new(),
             tokens: NonFungibleToken::new(
                 b"nft".to_vec(),owner_id.clone(),
-                Some(b"nft_approvals".to_vec()),
-                Some(b"nft_enumeration".to_vec()),
-                Some(b"nft_metadata".to_vec()),
+                Some(b"a".to_vec()),
+                Some(b"b".to_vec()),
+                Some(b"c".to_vec()),
             ),
-            metadata: LazyOption::new(b"metadata".to_vec(), Some(NFTContractMetadata::new(media_url.clone()))),
-            minters: UnorderedSet::new(b"minters".to_vec()),
+            metadata: LazyOption::new(b"x".to_vec(), Some(NFTContractMetadata::new(media_url.clone()))),
+            minters: UnorderedSet::new(b"y".to_vec()),
             next_entry_id: 0,
         }
     }
